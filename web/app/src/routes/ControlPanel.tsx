@@ -85,6 +85,7 @@ import { UpdateBanner } from "@/components/update-banner"
 import { VersionMismatchBanner } from "@/components/version-mismatch-banner"
 import { versionMismatch } from "@/lib/version"
 import { ConnectionsBar } from "@/components/connections-bar"
+import { VacuumControls } from "@/components/vacuum-controls"
 import { OperationPanel } from "@/components/operation-panel"
 import { LogConsole } from "@/components/log-console"
 import { SetupDialog, type ConnState } from "@/components/setup-dialog"
@@ -1879,41 +1880,47 @@ export default function ControlPanel() {
           </div>
         )}
 
-        <OperationPanel
-          key={renderedConnectionGeneration}
-          meta={meta}
-          spec={spec}
-          settings={settings}
-          hardwareProfile={hardwareProfile}
-          mantisSource={mantisSource}
-          sharedValues={settingsSnap?.values ?? null}
-          onChange={setSetting}
-          onReset={resetSetting}
-          onResetAll={resetAll}
-          onOpenSettings={() => openSettingsScope(hardwareProfile)}
-          cameras={cameras}
-          robot={robot}
-          live={selectedLive}
-          stopping={selectedStopping}
-          busy={busy}
-          session={selectedLive ? effectiveStatus : null}
-          host={viewerHost}
-          viewerPort={viewerPort}
-          vrPort={hostInfo?.vrPort ?? 8000}
-          startPhase={startPhase}
-          hostBlocker={
-            activeCommandSession
-              ? `${activeCommandSession.command} setup/diagnostic is running`
-              : isLive && !selectedLive
-                ? `${runningOp ?? "Another operation"} is running`
-                : null
-          }
-          connected={conn.state === "ok"}
-          policy={selectedLive ? policy : null}
-          onStart={handleStart}
-          onStop={handleStop}
-          onEpisode={handleEpisode}
-        />
+        <div className="grid items-start gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
+          <VacuumControls
+            key={`vacuum-${renderedConnectionGeneration}`}
+            connected={conn.state === "ok"}
+          />
+          <OperationPanel
+            key={renderedConnectionGeneration}
+            meta={meta}
+            spec={spec}
+            settings={settings}
+            hardwareProfile={hardwareProfile}
+            mantisSource={mantisSource}
+            sharedValues={settingsSnap?.values ?? null}
+            onChange={setSetting}
+            onReset={resetSetting}
+            onResetAll={resetAll}
+            onOpenSettings={() => openSettingsScope(hardwareProfile)}
+            cameras={cameras}
+            robot={robot}
+            live={selectedLive}
+            stopping={selectedStopping}
+            busy={busy}
+            session={selectedLive ? effectiveStatus : null}
+            host={viewerHost}
+            viewerPort={viewerPort}
+            vrPort={hostInfo?.vrPort ?? 8000}
+            startPhase={startPhase}
+            hostBlocker={
+              activeCommandSession
+                ? `${activeCommandSession.command} setup/diagnostic is running`
+                : isLive && !selectedLive
+                  ? `${runningOp ?? "Another operation"} is running`
+                  : null
+            }
+            connected={conn.state === "ok"}
+            policy={selectedLive ? policy : null}
+            onStart={handleStart}
+            onStop={handleStop}
+            onEpisode={handleEpisode}
+          />
+        </div>
 
         <LogConsole lines={lines} />
       </main>

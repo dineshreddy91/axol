@@ -874,6 +874,9 @@ def create_app(static_dir: Path | None = None) -> FastAPI:
         os.umask(0o027)
 
     app = FastAPI(title="axol serve")
+    from .vacuum import install_vacuum_routes
+
+    install_vacuum_routes(app)
     # Browser latches must not survive a quick serve restart that happens
     # entirely between two status polls. This value is opaque, process-local,
     # and intentionally regenerated for every app lifetime.

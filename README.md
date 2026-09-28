@@ -90,6 +90,25 @@ npm run build --workspace=app                        # → web/app/dist
 
 See the [installation guide](https://docs.almond.bot/installation) for the full walkthrough.
 
+### Left-arm USB vacuum
+
+The control panel includes **Vacuum ON**, **Vacuum OFF**, and **Release** on the left of the
+operation panel (above it on narrow screens). Configure the LCUS-2 USB relay
+before starting the server from this checkout:
+
+```bash
+AXOL_SUCTION_DEVICE=/dev/ttyUSB0 uv run axol serve
+```
+
+Use the relay's `/dev/serial/by-id/` path when available, and ensure the server
+user can access it. Channel 1 is the vent; channel 2 is vacuum. ON closes the
+vent before enabling vacuum. OFF disables vacuum, then the vent, without a
+blow-off pulse. Release disables vacuum, opens the vent for 0.4 seconds, then
+switches both relays off. Opening the panel does not change either relay. The displayed
+state is the last successful command, not pressure feedback; it starts unknown.
+Without `AXOL_SUCTION_DEVICE`, the controls show “Vacuum not configured”.
+These manual controls do not add vacuum channels to recorded datasets or policies.
+
 ## Testing
 
 The automated suite is hardware-independent: robot, CAN, ZED, and headset boundaries are exercised through protocol and API contracts, while simulation-capable code is imported with the `sim` extra. Several modules import the `lerobot` extra at import time, so install both. CI enforces aggregate coverage floors of 30% for the Python package and 75% for the tested browser libraries.
